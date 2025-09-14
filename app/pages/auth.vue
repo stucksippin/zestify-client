@@ -69,13 +69,19 @@
                     class="absolute right-3 top-3.5 text-foreground/40 hover:text-foreground/70 transition-colors"
                     @click="showLoginPassword = !showLoginPassword"
                   >
-                    <svg v-if="!showLoginPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                    </svg>
-                    <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
-                    </svg>
+                  
+<svg  v-if="!showLoginPassword"  width="20" height="20" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M15.406 1.125l-3.229 3.229C14.47 5.834 16 7.969 16 7.969s-3.582 5-8 5c-1.244 0-2.422-.397-3.472-.966l-3.372 3.372-.707-.707 3.2-3.2C1.451 9.997 0 7.969 0 7.969s3.582-5 8-5c1.17 0 2.28.351 3.282.867L14.7.418l.707.707zM8 4.969c.61 0 1.179.182 1.653.496L8.546 6.57a1.5 1.5 0 00-1.943 1.943L5.495 9.622A3 3 0 018 4.968zm-.742 4.304l-1.08 1.08a3 3 0 004.205-4.205l-1.079 1.08a1.5 1.5 0 01-2.046 2.046z" fill="#000"></path>
+</svg>
+
+<svg v-else  width="20" height="20" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M8 13.078c4.418 0 8-5 8-5s-3.582-5-8-5-8 5-8 5 3.582 5 8 5zm0-2a3 3 0 100-6 3 3 0 000 6zm0-1.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" fill="#000"></path>
+</svg>
+
+
+
+
+
                   </button>
                 </div>
                 <p v-if="loginErrors.password" class="text-red-500 text-xs">{{ loginErrors.password }}</p>
@@ -142,7 +148,7 @@
                 </svg>
               </div>
               <h1 class="text-3xl font-bold text-foreground mb-2">Создать аккаунт</h1>
-              <p class="text-foreground/70 text-sm">Заполните форму для регистрации</p>
+              <p class="text-foreground/70 text-sm">Заполните данные для регистрации</p>
             </div>
 
             <!-- Поля регистрации -->
@@ -155,13 +161,13 @@
                 </label>
                 <input
                   id="register-nickname"
-                  v-model="registerData.nickname"
+                  v-model="registerData.username"
                   type="text"
                   class="w-full px-4 py-3 bg-white border border-border rounded-xl text-secondary placeholder-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
                   placeholder="Ваш никнейм"
-                  :class="{ 'border-red-400': registerErrors.nickname }"
+                  :class="{ 'border-red-400': registerErrors.username }"
                 />
-                <p v-if="registerErrors.nickname" class="text-red-500 text-xs">{{ registerErrors.nickname }}</p>
+                <p v-if="registerErrors.username" class="text-red-500 text-xs">{{ registerErrors.username }}</p>
               </div>
 
               <!-- Email для регистрации -->
@@ -199,13 +205,15 @@
                     class="absolute right-3 top-3.5 text-foreground/40 hover:text-foreground/70 transition-colors"
                     @click="showRegisterPassword = !showRegisterPassword"
                   >
-                    <svg v-if="!showRegisterPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                    </svg>
-                    <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
-                    </svg>
+
+
+                    <svg  v-if="!showRegisterPassword"  width="20" height="20" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M15.406 1.125l-3.229 3.229C14.47 5.834 16 7.969 16 7.969s-3.582 5-8 5c-1.244 0-2.422-.397-3.472-.966l-3.372 3.372-.707-.707 3.2-3.2C1.451 9.997 0 7.969 0 7.969s3.582-5 8-5c1.17 0 2.28.351 3.282.867L14.7.418l.707.707zM8 4.969c.61 0 1.179.182 1.653.496L8.546 6.57a1.5 1.5 0 00-1.943 1.943L5.495 9.622A3 3 0 018 4.968zm-.742 4.304l-1.08 1.08a3 3 0 004.205-4.205l-1.079 1.08a1.5 1.5 0 01-2.046 2.046z" fill="#000"></path>
+</svg>
+
+<svg v-else  width="20" height="20" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M8 13.078c4.418 0 8-5 8-5s-3.582-5-8-5-8 5-8 5 3.582 5 8 5zm0-2a3 3 0 100-6 3 3 0 000 6zm0-1.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" fill="#000"></path>
+</svg>
                   </button>
                 </div>
                 <p v-if="registerErrors.password" class="text-red-500 text-xs">{{ registerErrors.password }}</p>
@@ -298,216 +306,150 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, ref, reactive } from 'vue'
+import type { LoginData, RegisterData, LoginErrors, RegisterErrors } from '@/types/auth'
+import { loginValidators, registerValidators, validateForm } from '@/lib/utils/validators'
+
+definePageMeta({
+  layout: 'auth',
+})
+
+export default defineComponent({
   name: 'AuthPage',
-  
-  
+ 
+  setup() {
+    const isRegisterMode = ref(false)
+    const isLoading = ref(false)
+    const showLoginPassword = ref(false)
+    const showRegisterPassword = ref(false)
+    const showConfirmPassword = ref(false)
 
-  data() {
-    return {
-      // Режим отображения (false - вход, true - регистрация)
-      isRegisterMode: false,
-      
-      // Состояния загрузки
-      isLoading: false,
-      
-      // Видимость паролей
-      showLoginPassword: false,
-      showRegisterPassword: false,
-      showConfirmPassword: false,
-      
-      // Данные формы входа
-      loginData: {
-        email: '',
-        password: '',
-        rememberMe: false
-      },
-      
-      // Данные формы регистрации
-      registerData: {
-        nickname: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        agreeToTerms: false
-      },
-      // Ошибки валидации для входа
-      loginErrors: {
-        email: '',
-        password: ''
-      },
-      
-      // Ошибки валидации для регистрации
-      registerErrors: {
-        nickname: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        agreeToTerms: ''
-      }
+    // Данные форм
+    const loginData = reactive<LoginData>({
+      email: '',
+      password: '',
+      rememberMe: false
+    })
+
+    const registerData = reactive<RegisterData>({
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      agreeToTerms: false
+    })
+
+    // Ошибки валидации
+    const loginErrors = reactive<LoginErrors>({
+      email: '',
+      password: ''
+    })
+
+    const registerErrors = reactive<RegisterErrors>({
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      agreeToTerms: ''
+    })
+
+    // Методы
+    const flipToRegister = () => {
+      isRegisterMode.value = true
+      clearErrors()
     }
-  },
-  
-  mounted() {
-    console.log('Компонент авторизации/регистрации загружен')
-  },
 
-  methods: {
-    // Переключение на режим регистрации
-    flipToRegister() {
-      this.isRegisterMode = true
-      this.clearErrors()
-    },
-    
-    // Переключение на режим входа
-    flipToLogin() {
-      this.isRegisterMode = false
-      this.clearErrors()
-    },
-    
-    // Очистка всех ошибок
-    clearErrors() {
-      this.loginErrors = { email: '', password: '' }
-      this.registerErrors = { nickname: '', email: '', password: '', confirmPassword: '', agreeToTerms: '' }
-    },
-    
-    // Валидация email
-    validateEmail(email) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      return emailRegex.test(email)
-    },
-    
-    // Валидация формы входа
-    validateLogin() {
-      this.loginErrors = { email: '', password: '' }
-      let isValid = true
+    const flipToLogin = () => {
+      isRegisterMode.value = false
+      clearErrors()
+    }
+
+    const clearErrors = () => {
+      Object.assign(loginErrors, { email: '', password: '' })
+      Object.assign(registerErrors, { 
+        username: '', 
+        email: '', 
+        password: '', 
+        confirmPassword: '', 
+        agreeToTerms: '' 
+      })
+    }
+
+   const validateLogin = (): boolean => {
+  const result = validateForm(loginData as Record<string, unknown>, loginValidators);
+  Object.assign(loginErrors, result.errors);
+  return result.isValid;
+};
+
+const validateRegister = (): boolean => {
+  const result = validateForm(registerData as Record<string, unknown>, registerValidators);
+  Object.assign(registerErrors, result.errors);
+  return result.isValid;
+};
+
+    const handleLogin = async (): Promise<void> => {
+      if (!validateLogin()) return
       
-      if (!this.loginData.email) {
-        this.loginErrors.email = 'Email обязателен'
-        isValid = false
-      } else if (!this.validateEmail(this.loginData.email)) {
-        this.loginErrors.email = 'Некорректный email'
-        isValid = false
-      }
-      
-      if (!this.loginData.password) {
-        this.loginErrors.password = 'Пароль обязателен'
-        isValid = false
-      } else if (this.loginData.password.length < 6) {
-        this.loginErrors.password = 'Минимум 6 символов'
-        isValid = false
-      }
-      
-      return isValid
-    },
-    
-    // Валидация формы регистрации
-    validateRegister() {
-      this.registerErrors = { nickname: '', email: '', password: '', confirmPassword: '', agreeToTerms: '' }
-      let isValid = true
-      // Проверка никнейма
-      if (!this.registerData.nickname.trim()) {
-        this.registerErrors.nickname = 'Никнейм обязателен'
-        isValid = false
-      } else if (this.registerData.nickname.trim().length < 2) {
-        this.registerErrors.nickname = 'Минимум 2 символа'
-        isValid = false
-      } else if (!/^[a-zA-Z0-9_]+$/.test(this.registerData.nickname)) {
-        this.registerErrors.nickname = 'Только латинские буквы, цифры и _'
-        isValid = false
-      }
-      // Проверка email
-      if (!this.registerData.email) {
-        this.registerErrors.email = 'Email обязателен'
-        isValid = false
-      } else if (!this.validateEmail(this.registerData.email)) {
-        this.registerErrors.email = 'Некорректный email'
-        isValid = false
-      }
-      // Проверка пароля
-      if (!this.registerData.password) {
-        this.registerErrors.password = 'Пароль обязателен'
-        isValid = false
-      } else if (this.registerData.password.length < 8) {
-        this.registerErrors.password = 'Минимум 8 символов'
-        isValid = false
-      } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(this.registerData.password)) {
-        this.registerErrors.password = 'Пароль должен содержать заглавные, строчные буквы и цифры'
-        isValid = false
-      }
-      // Проверка подтверждения пароля
-      if (!this.registerData.confirmPassword) {
-        this.registerErrors.confirmPassword = 'Подтверждение пароля обязательно'
-        isValid = false
-      } else if (this.registerData.password !== this.registerData.confirmPassword) {
-        this.registerErrors.confirmPassword = 'Пароли не совпадают'
-        isValid = false
-      }
-      // Проверка согласия с условиями
-      if (!this.registerData.agreeToTerms) {
-        this.registerErrors.agreeToTerms = 'Необходимо согласиться с условиями'
-        isValid = false
-      }
-      return isValid
-    },
-    
-    // Обработчик входа
-    async handleLogin() {
-      if (!this.validateLogin()) return
-      
-      this.isLoading = true
+      isLoading.value = true
       
       try {
-        // Имитация API запроса
+        // API запрос
         await new Promise(resolve => setTimeout(resolve, 2000))
-        
-        console.log('Вход:', this.loginData)
-        alert(`Добро пожаловать, ${this.loginData.email}!`)
-        
-        // Здесь бы был редирект
-        // this.$router.push('/dashboard')
+        console.log('Вход:', loginData)
+        alert(`Добро пожаловать, ${loginData.email}!`)
         
       } catch (error) {
         console.error('Ошибка входа:', error)
         alert('Ошибка входа. Проверьте данные.')
       } finally {
-        this.isLoading = false
+        isLoading.value = false
       }
-    },
-    
-    // Обработчик регистрации
-    async handleRegister() {
-      if (!this.validateRegister()) return
+    }
+
+    const handleRegister = async (): Promise<void> => {
+      if (!validateRegister()) return
       
-      this.isLoading = true
+      isLoading.value = true
       
       try {
-        // Имитация API запроса
+        // API запрос
         await new Promise(resolve => setTimeout(resolve, 2500))
+        console.log('Регистрация:', registerData)
+        alert(`Аккаунт создан! Добро пожаловать, ${registerData.username}!`)
         
-        console.log('Регистрация:', this.registerData)
-        alert(`Аккаунт создан! Добро пожаловать, ${this.registerData.nickname}!`)
-        
-        // После успешной регистрации можно переключить на вход
-        this.flipToLogin()
+        flipToLogin()
         
       } catch (error) {
         console.error('Ошибка регистрации:', error)
         alert('Ошибка регистрации. Попробуйте снова.')
       } finally {
-        this.isLoading = false
+        isLoading.value = false
       }
-    },
-    
-    // Забыли пароль
-    forgotPassword() {
+    }
+
+    const forgotPassword = (): void => {
       alert('Переход на страницу восстановления пароля')
     }
-  },
-  
 
-}
+    return {
+      isRegisterMode,
+      isLoading,
+      showLoginPassword,
+      showRegisterPassword,
+      showConfirmPassword,
+      loginData,
+      registerData,
+      loginErrors,
+      registerErrors,
+      flipToRegister,
+      flipToLogin,
+      handleLogin,
+      handleRegister,
+      forgotPassword
+    }
+  }
+})
 </script>
 
 <style scoped>
