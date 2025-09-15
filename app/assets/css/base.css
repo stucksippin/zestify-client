@@ -1,7 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
-    /* Темная тематическая основа */
-
-
 
     --background: 240 10% 4%;
     /* Глубокий темно-серый/черный (zinc-950) */
@@ -9,21 +10,11 @@
     --foreground: 0 0% 98%;
     /* Светлый текст (zinc-50) */
 
-
-
-
-    /* Акцентный цвет (как в киноплёнке) */
-
     --primary: 346 77% 50%;
     /* Насыщенный малиново-красный (red-600) */
 
     --primary-foreground: 0 0% 98%;
     /* Светлый текст */
-
-
-
-    /* Вторичный акцент */
-
 
     --secondary: 240 4% 16%;
     /* Темный серый (zinc-800) */
@@ -31,20 +22,66 @@
     --secondary-foreground: 0 0% 98%;
     /* Светлый текст */
 
-
-
-    /* Границы */
-
-
-
     --border: 240 4% 26%;
     /* Серый (zinc-700) */
 
-
-
-
-    /* Рейтинги */
-
     --accent-rating: 35 93% 62%;
     /* Золотой (amber-400) */
+}
+
+
+.page-root {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    min-height: 100vh;
+}
+
+.card {
+    background: hsl(var(--secondary));
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--secondary-foreground));
+    border-radius: 12px;
+}
+
+/* кнопки */
+.btn-primary {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    padding: 0.55rem 0.9rem;
+    border-radius: 8px;
+}
+
+.btn-ghost {
+    background: transparent;
+    color: hsl(var(--foreground));
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 0.25rem 0.6rem;
+    border-radius: 8px;
+    background: hsl(var(--primary));
+}
+
+/* модалки */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 60;
+}
+
+.modal-card {
+    background: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+    padding: 1.25rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 520px;
+    border: 1px solid hsl(var(--border));
+}
+
+.muted {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: .95rem;
 }

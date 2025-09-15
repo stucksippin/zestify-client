@@ -1,4 +1,12 @@
 module.exports = {
+    content: [
+        './app/**/*.{vue,ts,js}',
+        './components/**/*.{vue,ts,js}',
+        './pages/**/*.{vue,ts,js}',
+        './layouts/**/*.{vue,ts,js}',
+        './plugins/**/*.{ts,js}',
+        './nuxt.config.{ts,js}'
+    ],
     theme: {
         extend: {
             colors: {
@@ -16,5 +24,6 @@ module.exports = {
                 'accent-rating': 'hsl(var(--accent-rating))',
             }
         }
-    }
+    },
+    plugins: [],
 }
