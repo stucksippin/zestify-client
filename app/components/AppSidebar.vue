@@ -197,6 +197,7 @@ const mainMenuItems = [
   { icon: 'heroicons:film', label: 'Фильмы', href: '/movies' },
   { icon: 'heroicons:puzzle-piece', label: 'Игры', href: '/games' },
   { icon: 'heroicons:book-open', label: 'Книги', href: '/books' },
+  { icon: 'heroicons:globe-americas-16-solid', label: 'Лента', href: '/lenta' },
 ]
 
 // Настройки отдельно
