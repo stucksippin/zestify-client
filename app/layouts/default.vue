@@ -8,5 +8,5 @@
 </template>
 
 <script setup lang="ts">
-import AppSidebar from '~/components/AppSidebar.vue';
+import AppSidebar from '~/components/layout/AppSidebar.vue';
 </script>

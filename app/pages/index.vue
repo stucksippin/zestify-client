@@ -1,15 +1,12 @@
 <template>
   <div class="main-page">
-    <!-- Hero Section -->
+
     <AppHero />
-    
-    <!-- Features Section -->
+
     <AppFeatures />
     
-    <!-- Content Preview Section -->
     <AppContentPreview />
     
-    <!-- Community Section -->
     <AppComunity />
     
     <!-- CTA Section -->
@@ -18,11 +15,11 @@
 </template>
 
 <script setup lang="ts">
-import AppComunity from '~/components/Main/AppComunity.vue';
-import AppContentPreview from '~/components/Main/AppContentPreview.vue';
-import AppCTA from '~/components/Main/AppCTA.vue';
-import AppFeatures from '~/components/Main/AppFeatures.vue';
-import AppHero from '~/components/Main/AppHero.vue';
+import AppComunity from '@/components/home/AppComunity.vue';
+import AppContentPreview from '~/components/home/AppContentPreview.vue';
+import AppCTA from '~/components/home/AppCTA.vue';
+import AppFeatures from '~/components/home/AppFeatures.vue';
+import AppHero from '~/components/home/AppHero.vue';
 
 // Мета-данные для SEO
 useHead({

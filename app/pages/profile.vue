@@ -87,13 +87,13 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import ProfileHeader from '@/components/UserProfile/ProfileHeader.vue';
-import TabsNavigation from '@/components/UserProfile/TabsNavigation.vue';
-import CollectionsList from '@/components/UserProfile/CollectionsList.vue';
-import ReviewsList from '@/components/UserProfile/ReviewsList.vue';
-import MediaList from '@/components/UserProfile/MediaList.vue';
-import ActivityList from '@/components/UserProfile/ActivityList.vue';
-import SidePanel from '~/components/UserProfile/SidePanel.vue';
+import ProfileHeader from '~/components/profile/ProfileHeader.vue';
+import TabsNavigation from '~/components/profile/ProfileTabs.vue';
+import CollectionsList from '~/components/profile/CollectionsList.vue';
+import ReviewsList from '~/components/profile/ReviewsList.vue';
+import MediaList from '~/components/profile/MediaList.vue';
+import ActivityList from '~/components/profile/ActivityList.vue';
+import SidePanel from '~/components/profile/ProfileSidebar.vue';
 
 import {
   user as mockUser,
@@ -104,7 +104,7 @@ import {
   recentActivity as mockRecentActivity,
   genreStats as mockGenreStats,
   topFollowers as mockTopFollowers
-} from '@/components/UserProfile/mockData';
+} from '~/components/profile/mockData';
 
 import type { User, UserStats, CollectionItem, ReviewItem, MediaItem, ActivityItem } from '@/types/user';
 
