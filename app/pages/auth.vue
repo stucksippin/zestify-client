@@ -308,8 +308,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue'
-import type { LoginData, RegisterData, LoginErrors, RegisterErrors } from '@/types/auth'
-import { loginValidators, registerValidators, validateForm } from '@/lib/utils/validators'
+import type { LoginData, RegisterData, LoginErrors, RegisterErrors } from '@/types'
+import { loginValidators, registerValidators, validateForm } from '@/utils/validator'
 
 definePageMeta({
   layout: 'auth',
