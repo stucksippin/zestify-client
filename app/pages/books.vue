@@ -8,7 +8,7 @@
         <MediaSearch
           :filters="filters"
           :genres="genres"
-          :loading="loadingState.isLoading"
+          :loading="isLoading"
           media-type="books"
           @search="handleSearch"
           @update:filters="updateFilters"
@@ -18,7 +18,7 @@
           :author-query="authorQuery"
           :selected-subject="selectedSubject"
           :popular-subjects="popularSubjects"
-          :loading="loadingState.isLoading"
+          :loading="isLoading"
           @search-author="handleAuthorSearch"
           @search-subject="handleSubjectSearch"
           @update:author-query="authorQuery = $event"
@@ -35,23 +35,23 @@
           </div>
           
           <div class="quick-actions">
-            <button @click="loadPopular" class="action-btn" :disabled="loadingState.isLoading">
+            <button @click="loadPopular" class="action-btn" :disabled="isLoading">
               📈 Популярные
             </button>
-            <button @click="handleSubjectSearch('fiction')" class="action-btn" :disabled="loadingState.isLoading">
+            <button @click="handleSubjectSearch('fiction')" class="action-btn" :disabled="isLoading">
               📖 Художественная
             </button>
-            <button @click="handleSubjectSearch('science_fiction')" class="action-btn" :disabled="loadingState.isLoading">
+            <button @click="handleSubjectSearch('science_fiction')" class="action-btn" :disabled="isLoading">
               🚀 Фантастика
             </button>
           </div>
         </div>
 
-        <LoadingSpinner v-if="loadingState.isLoading && books.length === 0" />
+        <LoadingSpinner v-if="isLoading && books.length === 0" />
         
         <ErrorState 
-          v-else-if="loadingState.error"
-          :error="loadingState.error"
+          v-else-if="error"
+          :error="error"
           @retry="handleSearch"
         />
         
@@ -62,8 +62,8 @@
           />
           
           <LoadMoreButton
-            v-if="loadingState.hasMore"
-            :loading="loadingState.isLoading"
+            v-if="hasMore"
+            :loading="isLoading"
             @load-more="loadMore"
           />
         </div>
@@ -94,20 +94,19 @@
 </template>
 
 <script setup lang="ts">
-// Только импорты и вызовы composables - НИКАКОЙ логики!
-import type { Media } from '@/types'
-import MediaNavigation from '@/components/media/MediaNavigation.vue'
+import type { Media, MediaFilters, Genre } from '@/types'
+import MediaNavigation from '~/components/media/MediaNavigation.vue'
 import MediaSearch from '@/components/media/MediaSearch.vue'
 import BooksFeatures from '~/components/media/BooksFeatures.vue'
 import MediaGrid from '@/components/ui/MediaGrid.vue'
 import MediaGridEmpty from '@/components/ui/MediaGridEmpty.vue'
 import LoadingSpinner from '@/components/ui/LoadingSpinner.vue'
-// import ErrorState from '@/components/ui/ErrorState.vue'
-// import LoadMoreButton from '@/components/ui/LoadMoreButton.vue'
+import ErrorState from '~/components/ui/ErrorState.vue'
+import LoadMoreButton from '~/components/ui/LoadMoreButton.vue'
 
 // Мета-данные
 useHead({
-  title: 'Книги - MediaHub',
+  title: 'Книги - Zestify',
   meta: [
     {
       name: 'description',
@@ -116,37 +115,312 @@ useHead({
   ]
 })
 
-// ВСЯ логика в composables
-const { 
-  media: books, 
-  filters, 
-  loadingState, 
-  genres,
-  updateFilters 
-} = useMedia()
+// ===== СОСТОЯНИЕ =====
+const books = ref<Media[]>([])
+const isLoading = ref(false)
+const error = ref<string | null>(null)
+const hasMore = ref(true)
 
-const {
-  searchBooks,
-  searchByAuthor,
-  searchBySubject,
-  getPopularBooks,
-  loadMore,
-  popularSubjects
-} = useBooksAPI()
+const filters = ref<MediaFilters>({
+  search: '',
+  genre: '',
+  year: '',
+  rating: '',
+  sortBy: 'popularity',
+  sortOrder: 'desc'
+})
 
 // Локальное состояние для UI
 const authorQuery = ref('')
 const selectedSubject = ref('')
 const searchMode = ref<'search' | 'popular' | 'subject' | 'author'>('search')
 
-// Вычисляемые свойства
+// Моковые жанры книг (subjects)
+const genres = ref<Genre[]>([
+  { id: 'fiction', name: 'Художественная литература' },
+  { id: 'science_fiction', name: 'Научная фантастика' },
+  { id: 'fantasy', name: 'Фэнтези' },
+  { id: 'mystery', name: 'Детективы' },
+  { id: 'romance', name: 'Романтика' },
+  { id: 'biography', name: 'Биографии' },
+  { id: 'history', name: 'История' },
+  { id: 'philosophy', name: 'Философия' },
+  { id: 'science', name: 'Наука' },
+  { id: 'business', name: 'Бизнес' },
+  { id: 'self_help', name: 'Саморазвитие' },
+  { id: 'poetry', name: 'Поэзия' },
+  { id: 'drama', name: 'Драматургия' },
+  { id: 'thriller', name: 'Триллеры' },
+  { id: 'horror', name: 'Ужасы' }
+])
+
+// Популярные темы
+const popularSubjects = ref([
+  { id: 'fiction', name: 'Художественная' },
+  { id: 'science_fiction', name: 'Фантастика' },
+  { id: 'fantasy', name: 'Фэнтези' },
+  { id: 'mystery', name: 'Детективы' },
+  { id: 'romance', name: 'Романтика' },
+  { id: 'biography', name: 'Биографии' }
+])
+
+// Моковые данные книг
+const mockBooks: Media[] = [
+  {
+    id: 1,
+    title: 'Дюна',
+    year: '1965',
+    type: 'book',
+    typeIcon: '📚',
+    rating: 8.9,
+    description: 'Фрэнк Герберт создал удивительную вселенную, полную интриг, мистики и приключений. История пустынной планеты Арракис и борьбы за контроль над ней.',
+    poster: 'https://covers.openlibrary.org/b/id/8225261-M.jpg',
+    backdrop: 'https://covers.openlibrary.org/b/id/8225261-L.jpg',
+    genre: 'Научная фантастика',
+    status: 'read',
+    userRating: 5
+  },
+  {
+    id: 2,
+    title: 'Мастер и Маргарита',
+    year: '1967',
+    type: 'book',
+    typeIcon: '📚',
+    rating: 9.2,
+    description: 'Роман Михаила Булгакова о добре и зле, любви и предательстве. Сатирическое произведение о визите дьявола в советскую Москву.',
+    poster: 'https://covers.openlibrary.org/b/id/8739161-M.jpg',
+    backdrop: 'https://covers.openlibrary.org/b/id/8739161-L.jpg',
+    genre: 'Художественная литература',
+    status: 'read',
+    userRating: 5
+  },
+  {
+    id: 3,
+    title: 'Убить пересмешника',
+    year: '1960',
+    type: 'book',
+    typeIcon: '📚',
+    rating: 8.7,
+    description: 'Харпер Ли рассказывает историю о детстве, расизме и моральных принципах в американском городке 1930-х годов.',
+    poster: 'https://covers.openlibrary.org/b/id/8814175-M.jpg',
+    backdrop: 'https://covers.openlibrary.org/b/id/8814175-L.jpg',
+    genre: 'Художественная литература',
+    status: 'planned',
+    userRating: 4
+  },
+  {
+    id: 4,
+    title: '1984',
+    year: '1949',
+    type: 'book',
+    typeIcon: '📚',
+    rating: 9.0,
+    description: 'Джордж Оруэлл создал пророческую антиутопию о тоталитарном обществе и контроле над сознанием людей.',
+    poster: 'https://covers.openlibrary.org/b/id/7222246-M.jpg',
+    backdrop: 'https://covers.openlibrary.org/b/id/7222246-L.jpg',
+    genre: 'Научная фантастика',
+    status: 'read',
+    userRating: 5
+  },
+  {
+    id: 5,
+    title: 'Гарри Поттер и философский камень',
+    year: '1997',
+    type: 'book',
+    typeIcon: '📚',
+    rating: 8.5,
+    description: 'Дж. К. Роулинг открывает дверь в магический мир Хогвартса и приключений юного волшебника Гарри Поттера.',
+    poster: 'https://covers.openlibrary.org/b/id/10521270-M.jpg',
+    backdrop: 'https://covers.openlibrary.org/b/id/10521270-L.jpg',
+    genre: 'Фэнтези',
+    status: 'read',
+    userRating: 4
+  },
+  {
+    id: 6,
+    title: 'Преступление и наказание',
+    year: '1866',
+    type: 'book',
+    typeIcon: '📚',
+    rating: 9.1,
+    description: 'Фёдор Достоевский исследует психологию преступника и моральные дилеммы через историю Родиона Раскольникова.',
+    poster: 'https://covers.openlibrary.org/b/id/8739394-M.jpg',
+    backdrop: 'https://covers.openlibrary.org/b/id/8739394-L.jpg',
+    genre: 'Художественная литература',
+    status: 'planned',
+    userRating: 4
+  }
+]
+
+// ===== МЕТОДЫ =====
+
+const setLoading = (loading: boolean) => {
+  isLoading.value = loading
+}
+
+const setError = (errorMsg: string | null) => {
+  error.value = errorMsg
+}
+
+const updateFilters = (newFilters: Partial<MediaFilters>) => {
+  filters.value = { ...filters.value, ...newFilters }
+}
+
+const filterBooks = (): Media[] => {
+  let filtered = [...mockBooks]
+  
+  // Поиск по названию
+  if (filters.value.search) {
+    const searchTerm = filters.value.search.toLowerCase()
+    filtered = filtered.filter(book => 
+      book.title.toLowerCase().includes(searchTerm) ||
+      book.description?.toLowerCase().includes(searchTerm)
+    )
+  }
+  
+  // Фильтр по жанру/теме
+  if (filters.value.genre) {
+    const genreName = genres.value.find(g => g.id === filters.value.genre)?.name
+    if (genreName) {
+      filtered = filtered.filter(book => 
+        book.genre?.includes(genreName)
+      )
+    }
+  }
+  
+  // Фильтр по году
+  if (filters.value.year) {
+    filtered = filtered.filter(book => book.year === filters.value.year)
+  }
+  
+  // Фильтр по рейтингу
+  if (filters.value.rating) {
+    const minRating = parseFloat(filters.value.rating)
+    filtered = filtered.filter(book => book.rating >= minRating)
+  }
+  
+  // Фильтрация по автору
+  if (authorQuery.value && searchMode.value === 'author') {
+    const authorTerm = authorQuery.value.toLowerCase()
+    // В реальности здесь был бы поиск по полю author
+    filtered = filtered.filter(book => 
+      book.title.toLowerCase().includes(authorTerm) ||
+      book.description?.toLowerCase().includes(authorTerm)
+    )
+  }
+  
+  // Фильтрация по выбранной теме
+  if (selectedSubject.value && searchMode.value === 'subject') {
+    const subject = popularSubjects.value.find(s => s.id === selectedSubject.value)
+    if (subject) {
+      filtered = filtered.filter(book => 
+        book.genre?.toLowerCase().includes(subject.name.toLowerCase())
+      )
+    }
+  }
+  
+  // Сортировка
+  if (filters.value.sortBy) {
+    filtered.sort((a, b) => {
+      let comparison = 0
+      
+      switch (filters.value.sortBy) {
+        case 'title':
+          comparison = a.title.localeCompare(b.title)
+          break
+        case 'year':
+          comparison = parseInt(a.year) - parseInt(b.year)
+          break
+        case 'rating':
+          comparison = a.rating - b.rating
+          break
+        case 'popularity':
+        default:
+          comparison = a.rating - b.rating
+          break
+      }
+      
+      return filters.value.sortOrder === 'asc' ? comparison : -comparison
+    })
+  }
+  
+  return filtered
+}
+
+const loadBooks = async (delay = 1000) => {
+  setLoading(true)
+  setError(null)
+  
+  await new Promise(resolve => setTimeout(resolve, delay))
+  
+  try {
+    const filtered = filterBooks()
+    books.value = filtered
+    hasMore.value = false
+  } catch (err) {
+    setError('Ошибка загрузки книг')
+    console.error(err)
+  } finally {
+    setLoading(false)
+  }
+}
+
+// ===== ОБРАБОТЧИКИ =====
+
+const handleSearch = () => {
+  searchMode.value = 'search'
+  selectedSubject.value = ''
+  authorQuery.value = ''
+  loadBooks(500)
+}
+
+const handleAuthorSearch = (author: string) => {
+  if (!author.trim()) return
+  searchMode.value = 'author'
+  selectedSubject.value = ''
+  authorQuery.value = author.trim()
+  loadBooks()
+}
+
+const handleSubjectSearch = (subjectId: string) => {
+  searchMode.value = 'subject'
+  selectedSubject.value = subjectId
+  authorQuery.value = ''
+  loadBooks()
+}
+
+const loadPopular = () => {
+  searchMode.value = 'popular'
+  selectedSubject.value = ''
+  authorQuery.value = ''
+  filters.value = {
+    search: '',
+    genre: '',
+    year: '',
+    rating: '',
+    sortBy: 'rating',
+    sortOrder: 'desc'
+  }
+  loadBooks()
+}
+
+const loadMore = () => {
+  console.log('Больше книг загружено (мок)')
+}
+
+const handleBookClick = (book: Media) => {
+  navigateTo(`/books/${book.id}`)
+}
+
+// ===== ВЫЧИСЛЯЕМЫЕ СВОЙСТВА =====
+
 const pageTitle = computed(() => {
   switch (searchMode.value) {
     case 'popular':
       return 'Популярные книги'
     case 'subject':
-      const subject = popularSubjects.find(s => s.id === selectedSubject.value)
-      return subject ? `${subject.name} литература` : 'Книги по жанру'
+      { const subject = popularSubjects.value.find(s => s.id === selectedSubject.value)
+      return subject ? `${subject.name} литература` : 'Книги по жанру' }
     case 'author':
       return `Книги автора: ${authorQuery.value}`
     default:
@@ -163,41 +437,8 @@ const resultsText = computed(() => {
   return `${count} книг найдено`
 })
 
-// Обработчики событий - ТОЛЬКО делегирование
-const handleSearch = () => {
-  searchMode.value = 'search'
-  selectedSubject.value = ''
-  searchBooks(filters.value)
-}
+// ===== ИНИЦИАЛИЗАЦИЯ =====
 
-const handleAuthorSearch = (author: string) => {
-  if (!author.trim()) return
-  searchMode.value = 'author'
-  selectedSubject.value = ''
-  searchByAuthor(author.trim())
-}
-
-const handleSubjectSearch = (subjectId: string) => {
-  searchMode.value = 'subject'
-  selectedSubject.value = subjectId
-  const subject = popularSubjects.find(s => s.id === subjectId)
-  if (subject) {
-    searchBySubject(subject.name)
-  }
-}
-
-const loadPopular = () => {
-  searchMode.value = 'popular'
-  selectedSubject.value = ''
-  getPopularBooks()
-}
-
-const handleBookClick = (book: Media) => {
-  // Навигация к детальной странице
-  navigateTo(`/books/${book.id}`)
-}
-
-// Загружаем данные при монтировании
 onMounted(() => {
   loadPopular()
 })

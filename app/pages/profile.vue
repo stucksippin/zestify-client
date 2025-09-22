@@ -104,9 +104,9 @@ import {
   recentActivity as mockRecentActivity,
   genreStats as mockGenreStats,
   topFollowers as mockTopFollowers
-} from '~/components/profile/mockData';
+} from '@/components/profile/mockData';
 
-import type { User, UserStats, CollectionItem, ReviewItem, MediaItem, ActivityItem } from '@/types/user';
+import type { User, UserStats, CollectionItem, ReviewItem, MediaItem, ActivityItem } from '@/types';
 
 const user = ref<User>(mockUser);
 const userStats = ref<UserStats>(mockUserStats);

@@ -1,6 +1,6 @@
 <template>
   <div>
-    lenta
+    feed
   </div>
 </template>
 

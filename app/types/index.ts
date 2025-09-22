@@ -1,6 +1,8 @@
 // types/index.ts - ЕДИНЫЙ файл со всеми типами проекта
 
-// ===== БАЗОВЫЕ ТИПЫ =====
+// =============================================================================
+// БАЗОВЫЕ ТИПЫ
+// =============================================================================
 
 export interface Author {
     name: string
@@ -10,7 +12,9 @@ export interface Author {
 export type MediaType = 'movie' | 'game' | 'book'
 export type MediaStatus = 'watched' | 'playing' | 'read' | 'planned' | 'dropped'
 
-// ===== МЕДИА ТИПЫ =====
+// =============================================================================
+// МЕДИА ТИПЫ
+// =============================================================================
 
 export interface Media {
     id: number
@@ -52,9 +56,11 @@ export interface MediaTab {
     href: string
 }
 
-// ===== API ТИПЫ =====
+// =============================================================================
+// API ТИПЫ
+// =============================================================================
 
-// TMDB API
+// TMDB API (фильмы)
 export interface TMDBMovie {
     id: number
     title: string
@@ -75,7 +81,7 @@ export interface TMDBResponse {
     total_results: number
 }
 
-// RAWG API
+// RAWG API (игры)
 export interface RAWGGame {
     id: number
     name: string
@@ -96,7 +102,7 @@ export interface RAWGResponse {
     results: RAWGGame[]
 }
 
-// Open Library API
+// Open Library API (книги)
 export interface OpenLibraryBook {
     key: string
     title: string
@@ -116,7 +122,9 @@ export interface OpenLibraryResponse {
     docs: OpenLibraryBook[]
 }
 
-// ===== ПОЛЬЗОВАТЕЛЬСКИЕ ТИПЫ =====
+// =============================================================================
+// ПОЛЬЗОВАТЕЛЬ И ПРОФИЛЬ
+// =============================================================================
 
 export interface User {
     id: string
@@ -137,15 +145,26 @@ export interface UserStats {
     following_count?: number
 }
 
+// =============================================================================
+// КОЛЛЕКЦИИ
+// =============================================================================
+
 export interface Collection {
     id: string
     name: string
     description?: string
-    media_type?: string
+    media_type?: 'books' | 'movies' | 'games' | 'all'
     media_count?: number
     is_public?: boolean
     updated_at?: string
 }
+
+// Алиас для совместимости с профилем
+export type CollectionItem = Collection
+
+// =============================================================================
+// РЕЦЕНЗИИ
+// =============================================================================
 
 export interface Review {
     id: string
@@ -156,34 +175,71 @@ export interface Review {
     comments_count: number
     user_liked?: boolean
     created_at: string
-    media: {
-        id: string
-        title: string
-        type: string
-        year?: number
-        poster_url?: string
-    }
+    media: MediaBasic
 }
+
+// Алиас для совместимости с профилем
+export type ReviewItem = Review
+
+export interface MediaBasic {
+    id: string
+    title: string
+    type: 'books' | 'movies' | 'games'
+    year?: number
+    poster_url?: string
+}
+
+// =============================================================================
+// ПОЛЬЗОВАТЕЛЬСКОЕ МЕДИА
+// =============================================================================
 
 export interface UserMedia {
     id: string
     title: string
-    type: string
+    type: 'books' | 'movies' | 'games'
     year?: number
     poster_url?: string
     is_favorite?: boolean
     user_rating?: number
-    user_status?: string
+    user_status?: 'completed' | 'playing' | 'reading' | 'watching' | 'want' | 'dropped'
 }
+
+// Алиас для совместимости с профилем
+export type MediaItem = UserMedia
+
+// =============================================================================
+// АКТИВНОСТЬ
+// =============================================================================
 
 export interface Activity {
     id: string
-    type: string
+    type: 'review_created' | 'collection_created' | 'media_added' | 'followed_user' | 'liked_review'
     text: string
     created_at: string
 }
 
-// ===== СОСТОЯНИЯ И УТИЛИТЫ =====
+// Алиас для совместимости с профилем
+export type ActivityItem = Activity
+
+// =============================================================================
+// ДОПОЛНИТЕЛЬНЫЕ ТИПЫ ДЛЯ ПРОФИЛЯ
+// =============================================================================
+
+export interface GenreStat {
+    name: string
+    count: number
+}
+
+export interface TopFollower {
+    id: string
+    username: string
+    avatar_url?: string
+    common_media: number
+}
+
+// =============================================================================
+// СОСТОЯНИЯ И УТИЛИТЫ
+// =============================================================================
 
 export interface LoadingState {
     isLoading: boolean
@@ -196,7 +252,9 @@ export interface Genre {
     name: string
 }
 
-// ===== КОМПОНЕНТНЫЕ ТИПЫ =====
+// =============================================================================
+// КОМПОНЕНТНЫЕ ТИПЫ
+// =============================================================================
 
 export interface Feature {
     id: number
@@ -210,16 +268,44 @@ export interface Feature {
     }
 }
 
-// ===== ФИЛЬТРЫ И ТАБЫ =====
+// =============================================================================
+// UI ТИПЫ И ФИЛЬТРЫ
+// =============================================================================
 
+// Профиль
 export type ProfileTab = 'collections' | 'reviews' | 'media' | 'activity'
+export type TabType = ProfileTab // Алиас для совместимости
+
 export type CollectionsFilter = 'all' | 'public' | 'private' | 'books' | 'movies' | 'games'
 export type ReviewsFilter = 'all' | 'books' | 'movies' | 'games' | 'recent' | 'top_rated'
 export type ReviewsSort = 'newest' | 'oldest' | 'rating_desc' | 'rating_asc'
 export type MediaFilter = 'all' | 'books' | 'movies' | 'games' | 'favorites'
-export type ViewMode = 'grid' | 'list' | 'compact'
 
-// ===== КОНСТАНТЫ =====
+// Виды отображения
+export type ViewMode = 'grid' | 'list' | 'compact'
+export type MediaView = 'grid' | 'list' // Алиас для совместимости
+
+// =============================================================================
+// API RESPONSE ТИПЫ
+// =============================================================================
+
+export interface ApiResponse<T> {
+    data: T
+    message?: string
+    status: 'success' | 'error'
+}
+
+export interface PaginatedResponse<T> {
+    data: T[]
+    total: number
+    page: number
+    limit: number
+    hasMore: boolean
+}
+
+// =============================================================================
+// КОНСТАНТЫ
+// =============================================================================
 
 export const MEDIA_TYPES: Record<MediaType, { label: string; icon: string; href: string }> = {
     movie: { label: 'Фильмы', icon: '🎬', href: '/movies' },
